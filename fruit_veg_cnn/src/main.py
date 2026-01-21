@@ -1,11 +1,15 @@
-import torch
-import torchvision
-import torchvision.transforms as transforms
-import matplotlib.pyplot as plt
-import numpy as np
-import os
+# from flask import Flask, jsonify
 
-# Configuration
-BATCH_SIZE = 32      # Process 32 images at a time
-IMG_SIZE = 64        # Resize all images to 64x64
-DATA_DIR = './data'  # Path to your data folder
+# app = Flask(__name__)
+
+# @app.route('/predict', methods=['GET', 'POST'])
+# def predict():
+#     # DUMMY RESPONSE - Phase 1 only!
+#     return jsonify({
+#         "message": "Hello from the AI Service!",
+#         "prediction": "Apple",
+#         "confidence": 0.99
+#     })
+
+# if __name__ == '__main__':
+#     app.run(host='0.0.0.0', port=5000)

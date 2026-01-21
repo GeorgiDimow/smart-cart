@@ -1,0 +1,19 @@
+package com.smartcart.store;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
+
+@SpringBootApplication
+public class StoreApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(StoreApplication.class, args);
+    }
+
+    // This bean allows us to make HTTP calls to the AI service
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+}

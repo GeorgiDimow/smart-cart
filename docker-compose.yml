@@ -1,0 +1,14 @@
+services:
+  ai-service:
+    build: ./fruit_veg_cnn
+    ports:
+      - "5001:5000"
+    environment:
+      - FLASK_ENV=development
+
+  store-backend:
+    build: ./store_backend
+    ports:
+      - "8080:8080"  
+    depends_on:
+      - ai-service   
