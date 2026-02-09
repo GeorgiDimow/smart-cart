@@ -1,14 +1,12 @@
-# Use a lightweight Python image
 FROM python:3.9-slim
 
 WORKDIR /app
 
-# Copy requirements and install
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the code
 COPY . .
 
-# Run the app
-CMD ["python", "app.py"]
+ENV PYTHONPATH="/app/src"
+
+CMD ["python", "./src/app.py"]
