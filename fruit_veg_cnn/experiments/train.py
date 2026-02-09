@@ -5,7 +5,7 @@ from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
 import os
 
-from fruit_veg_cnn.models.model import MiniVGG
+from models.model import MiniVGG
 
 IMG_SIZE = 100
 BATCH_SIZE = 32
@@ -14,7 +14,7 @@ LEARNING_RATE = 0.001
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 DATA_DIR =  os.path.join(BASE_DIR,'.././data/input/Test')
-MODEL_SAVE_PATH = os.path.join(BASE_DIR, '.././modelDictionaries/model.pth')
+MODEL_SAVE_PATH = os.path.join(BASE_DIR, '.././model_dictionaries/model.pth')
 CLASSES_SAVE_PATH = os.path.join(BASE_DIR, '.././classes/classes.txt')
 
 def train():

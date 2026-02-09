@@ -1,3 +1,10 @@
+import sys
+import os
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+sys.path.append(parent_dir)
+
 import torch
 import uvicorn
 from fastapi import FastAPI, HTTPException
@@ -8,7 +15,7 @@ import io
 import base64
 import os
 
-from fruit_veg_cnn.models.model import MiniVGG
+from models.model import MiniVGG
 
 app = FastAPI(title="FruitVeg AI Service")
 
@@ -16,21 +23,21 @@ class ImageRequest(BaseModel):
     image: str
 
 IMG_SIZE = 100
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-MODEL_SAVE_PATH = os.path.join(BASE_DIR, '.././modelDictionaries/model.pth')
-CLASSES_SAVE_PATH = os.path.join(BASE_DIR, '.././classes/classes.txt')
+BASE_DIR = current_dir
+MODEL_PATH = os.path.join(BASE_DIR, '.././model_dictionaries/model.pth')
+CLASSES_PATH = os.path.join(BASE_DIR, '.././classes/classes.txt')
 
 device = torch.device("cpu")
 
 
-if os.path.exists(CLASSES_FILE):
-    with open(CLASSES_FILE, 'r') as f:
+if os.path.exists(CLASSES_PATH):
+    with open(CLASSES_PATH, 'r') as f:
         class_names = [line.strip() for line in f]
     print(f"✓ Found {len(class_names)} classes")
 else:
     print(f"⚠ ERROR: classes.txt not found.")
     class_names = ["Unknown"] * 20
-l
+
 model = MiniVGG(num_classes=len(class_names))
 
 if os.path.exists(MODEL_PATH):
@@ -61,11 +68,9 @@ async def predict(req: ImageRequest):
             
         image_bytes = base64.b64decode(image_data)
         
-        # Preprocessing
         image = Image.open(io.BytesIO(image_bytes)).convert('RGB')
         tensor = transform(image).unsqueeze(0).to(device)
         
-        # Inference
         with torch.no_grad():
             outputs = model(tensor)
             probabilities = torch.nn.functional.softmax(outputs[0], dim=0)

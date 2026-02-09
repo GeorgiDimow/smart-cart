@@ -8,7 +8,7 @@ from sklearn.metrics import confusion_matrix
 import numpy as np
 import os
 
-from model import MiniVGG
+from models.model import MiniVGG
 
 IMG_SIZE = 100 
 BATCH_SIZE = 32
@@ -16,8 +16,8 @@ BATCH_SIZE = 32
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 DATA_DIR =  os.path.join(BASE_DIR,'.././data/input/Test')
-MODEL_PATH = os.path.join(BASE_DIR, 'model.pth')
-CLASSES_FILE = os.path.join(BASE_DIR, 'classes.txt')
+MODEL_PATH = os.path.join(BASE_DIR, '.././model_dictionaries/model.pth')
+CLASSES_FILE = os.path.join(BASE_DIR, '.././classes/classes.txt')
 
 plt.switch_backend('Agg')
 
