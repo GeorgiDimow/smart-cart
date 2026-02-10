@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   ai-service:
     build: ./fruit_veg_cnn
@@ -5,10 +7,20 @@ services:
       - "5001:5000"
     environment:
       - FLASK_ENV=development
+    volumes:
+       - ./fruit_veg_cnn:/app
 
   store-backend:
     build: ./store_backend
     ports:
-      - "8080:8080"  
+      - "8080:8080"
     depends_on:
-      - ai-service   
+      - ai-service
+
+  store-frontend:
+    build: ./store_frontend
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    depends_on:
+      - store-backend
