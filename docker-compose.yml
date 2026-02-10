@@ -10,12 +10,38 @@ services:
     volumes:
        - ./fruit_veg_cnn:/app
 
+  postgres:
+    image: postgres:15
+    container_name: smartcart-db
+    environment:
+      POSTGRES_DB: smartcart
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:alpine
+    container_name: smartcart-redis
+    ports:
+      - "6379:6379"
+
   store-backend:
     build: ./store_backend
     ports:
       - "8080:8080"
     depends_on:
       - ai-service
+      - postgres
+      - redis
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/smartcart
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_REDIS_HOST=redis
+      - SPRING_REDIS_PORT=6379
 
   store-frontend:
     build: ./store_frontend
@@ -24,3 +50,6 @@ services:
     stdin_open: true
     depends_on:
       - store-backend
+
+volumes:
+  postgres_data:

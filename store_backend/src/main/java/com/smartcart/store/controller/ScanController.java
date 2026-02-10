@@ -15,7 +15,7 @@ public class ScanController {
 
     @PostMapping("/scan")
     public Map<String, Object> scanItem(@RequestBody ScanRequest request) {
-        String aiUrl = "http://localhost:5000/predict";
+        String aiUrl = "http://ai-service:5000/predict";
         
         return restTemplate.postForObject(aiUrl, request, Map.class);
     }
