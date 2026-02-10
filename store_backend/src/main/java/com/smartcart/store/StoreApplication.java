@@ -11,7 +11,6 @@ public class StoreApplication {
         SpringApplication.run(StoreApplication.class, args);
     }
 
-    // This bean allows us to make HTTP calls to the AI service
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();

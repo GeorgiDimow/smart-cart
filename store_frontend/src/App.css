@@ -1,0 +1,7 @@
+.App { text-align: center; background-color: #282c34; min-height: 100vh; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.camera-container { border: 5px solid #61dafb; border-radius: 10px; overflow: hidden; margin-bottom: 20px; width: 400px; height: 300px; background: #000; }
+.scan-btn { padding: 15px 30px; font-size: 1.2rem; background-color: #61dafb; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; transition: transform 0.2s; }
+.scan-btn:hover { transform: scale(1.05); background-color: #4fa8d1; }
+.scan-btn:disabled { background-color: #555; cursor: not-allowed; }
+.result-card { margin-top: 20px; padding: 20px; background: rgba(255, 255, 255, 0.1); border-radius: 10px; width: 300px; }
+.highlight { color: #61dafb; font-weight: bold; text-transform: uppercase; }
