@@ -1,6 +1,6 @@
-package com.smartcart.store.controller;
+package com.smartcart.store.web;
 
-import com.smartcart.store.dto.ScanRequest;
+import com.smartcart.store.application.dto.ScanRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
