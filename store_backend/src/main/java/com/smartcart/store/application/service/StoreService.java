@@ -10,6 +10,8 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.smartcart.store.domain.event.StoreDeletedEvent;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,6 +22,17 @@ public class StoreService {
 
     private final StoreRepository storeRepository;
     private final StoreMapper storeMapper;
+    private final ApplicationEventPublisher eventPublisher;
+
+    @Transactional
+    public void deleteStore(String code) {
+        Store store = storeRepository.findByCode(code)
+                .orElseThrow(() -> new EntityNotFoundException("Store not found with code: " + code));
+
+        eventPublisher.publishEvent(new StoreDeletedEvent(code));
+
+        storeRepository.delete(store);
+    }
 
     @Transactional
     public StoreResponse createStore(CreateStoreRequest request) {
@@ -54,12 +67,5 @@ public class StoreService {
         
         storeMapper.updateEntityFromDto(request, store);
         return storeMapper.toResponse(storeRepository.save(store));
-    }
-
-    @Transactional
-    public void deleteStore(String code) { 
-        Store store = storeRepository.findByCode(code)
-                .orElseThrow(() -> new EntityNotFoundException("Store not found with code: " + code));
-        storeRepository.delete(store);
     }
 }

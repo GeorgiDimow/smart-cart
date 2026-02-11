@@ -1,13 +1,13 @@
 package com.smartcart.store.application.service;
 
-import com.smartcart.store.application.dto.product.CreateProductRequest;
-import com.smartcart.store.application.dto.product.ProductResponse;
-import com.smartcart.store.application.dto.product.UpdateProductRequest;
+import com.smartcart.store.application.dto.product.*;
 import com.smartcart.store.application.mapper.ProductMapper;
+import com.smartcart.store.domain.event.ProductDeletedEvent; // Import Event
 import com.smartcart.store.domain.model.Product;
 import com.smartcart.store.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher; // Import Publisher
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +20,18 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
+    private final ApplicationEventPublisher eventPublisher;
+
+    @Transactional
+    public void deleteProduct(String sku) {
+        if (!productRepository.existsBySku(sku)) {
+            throw new EntityNotFoundException("Product not found with SKU: " + sku);
+        }
+
+        eventPublisher.publishEvent(new ProductDeletedEvent(sku));
+
+        productRepository.deleteBySku(sku);
+    }
 
     @Transactional
     public ProductResponse createProduct(CreateProductRequest request) {
@@ -55,13 +67,5 @@ public class ProductService {
                 .orElseThrow(() -> new EntityNotFoundException("Product not found with SKU: " + sku));
         productMapper.updateEntityFromDto(request, product);
         return productMapper.toResponse(productRepository.save(product));
-    }
-
-    @Transactional
-    public void deleteProduct(String sku) {
-        if (!productRepository.existsBySku(sku)) {
-            throw new EntityNotFoundException("Product not found with SKU: " + sku);
-        }
-        productRepository.deleteBySku(sku);
     }
 }
