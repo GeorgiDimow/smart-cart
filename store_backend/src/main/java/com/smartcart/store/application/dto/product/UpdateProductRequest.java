@@ -1,4 +1,4 @@
-package com.smartcart.store.application.dto;
+package com.smartcart.store.application.dto.product;
 
 import jakarta.validation.constraints.Min;
 import lombok.Data;

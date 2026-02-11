@@ -1,8 +1,8 @@
 package com.smartcart.store.application.mapper;
 
-import com.smartcart.store.application.dto.CreateProductRequest;
-import com.smartcart.store.application.dto.ProductResponse;
-import com.smartcart.store.application.dto.UpdateProductRequest;
+import com.smartcart.store.application.dto.product.CreateProductRequest;
+import com.smartcart.store.application.dto.product.ProductResponse;
+import com.smartcart.store.application.dto.product.UpdateProductRequest;
 import com.smartcart.store.domain.model.Product;
 import org.springframework.stereotype.Component;
 

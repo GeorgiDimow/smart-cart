@@ -1,4 +1,4 @@
-package com.smartcart.store.application.dto;
+package com.smartcart.store.application.dto.product;
 
 import com.smartcart.store.domain.model.Product;
 import lombok.Data;

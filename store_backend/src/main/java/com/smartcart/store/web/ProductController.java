@@ -1,14 +1,14 @@
 package com.smartcart.store.web;
 
-import com.smartcart.store.application.dto.CreateProductRequest;
-import com.smartcart.store.application.dto.ProductResponse;
+import com.smartcart.store.application.dto.product.CreateProductRequest;
+import com.smartcart.store.application.dto.product.ProductResponse;
+import com.smartcart.store.application.dto.product.UpdateProductRequest;
 import com.smartcart.store.application.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.smartcart.store.application.dto.UpdateProductRequest;
 
 import java.util.List;
 
