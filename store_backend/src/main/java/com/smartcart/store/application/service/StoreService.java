@@ -23,6 +23,11 @@ public class StoreService {
 
     @Transactional
     public StoreResponse createStore(CreateStoreRequest request) {
+        
+        if (storeRepository.existsByCode(request.getCode())) {
+            throw new IllegalArgumentException("Store with code " + request.getCode() + " already exists.");
+        }
+        
         Store store = storeMapper.toEntity(request);
         Store savedStore = storeRepository.save(store);
         return storeMapper.toResponse(savedStore);
@@ -36,26 +41,25 @@ public class StoreService {
     }
 
     @Transactional(readOnly = true)
-    public StoreResponse getStore(Long id) {
-        Store store = storeRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Store not found with id: " + id));
+    public StoreResponse getStore(String code) { 
+        Store store = storeRepository.findByCode(code)
+                .orElseThrow(() -> new EntityNotFoundException("Store not found with code: " + code));
         return storeMapper.toResponse(store);
     }
 
     @Transactional
-    public StoreResponse updateStore(Long id, UpdateStoreRequest request) {
-        Store store = storeRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Store not found with id: " + id));
+    public StoreResponse updateStore(String code, UpdateStoreRequest request) { 
+        Store store = storeRepository.findByCode(code)
+                .orElseThrow(() -> new EntityNotFoundException("Store not found with code: " + code));
         
         storeMapper.updateEntityFromDto(request, store);
         return storeMapper.toResponse(storeRepository.save(store));
     }
 
     @Transactional
-    public void deleteStore(Long id) {
-        if (!storeRepository.existsById(id)) {
-            throw new EntityNotFoundException("Store not found with id: " + id);
-        }
-        storeRepository.deleteById(id);
+    public void deleteStore(String code) { 
+        Store store = storeRepository.findByCode(code)
+                .orElseThrow(() -> new EntityNotFoundException("Store not found with code: " + code));
+        storeRepository.delete(store);
     }
 }

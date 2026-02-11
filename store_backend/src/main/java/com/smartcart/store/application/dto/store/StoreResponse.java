@@ -5,8 +5,12 @@ import lombok.Data;
 
 @Data
 public class StoreResponse {
-    private Long id;
+    
+    private String code;
+
     private String name;
+
     private String address;
+    
     private StoreType type;
 }

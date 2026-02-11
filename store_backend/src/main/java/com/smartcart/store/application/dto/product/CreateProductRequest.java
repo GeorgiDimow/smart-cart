@@ -3,6 +3,7 @@ package com.smartcart.store.application.dto.product;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern; // Import this!
 import lombok.Data;
 import java.math.BigDecimal;
 
@@ -13,6 +14,7 @@ public class CreateProductRequest {
     private String name;
 
     @NotBlank(message = "SKU is required")
+    @Pattern(regexp = "^[A-Z]+-[A-Z0-9]+$", message = "SKU must follow format ABBREVIATION-BARCODE (e.g., APP-001)")
     private String sku;
 
     @NotNull(message = "Price is required")

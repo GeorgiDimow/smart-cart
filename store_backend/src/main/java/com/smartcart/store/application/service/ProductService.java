@@ -38,36 +38,30 @@ public class ProductService {
     @Transactional(readOnly = true)
     public List<ProductResponse> getAllProducts() {
         return productRepository.findAll().stream()
-                .map(productMapper::toResponse)
-                .collect(Collectors.toList());
+                    .map(productMapper::toResponse)
+                    .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public ProductResponse getProduct(Long id) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Product not found with id: " + id));
-        
+    public ProductResponse getProductBySku(String sku) {
+        Product product = productRepository.findBySku(sku)
+                .orElseThrow(() -> new EntityNotFoundException("Product not found with SKU: " + sku));
         return productMapper.toResponse(product);
     }
 
     @Transactional
-    public ProductResponse updateProduct(Long id, UpdateProductRequest request) {
-
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Product not found with id: " + id));
-
+    public ProductResponse updateProduct(String sku, UpdateProductRequest request) {
+        Product product = productRepository.findBySku(sku)
+                .orElseThrow(() -> new EntityNotFoundException("Product not found with SKU: " + sku));
         productMapper.updateEntityFromDto(request, product);
-
-        Product updatedProduct = productRepository.save(product);
-
-        return productMapper.toResponse(updatedProduct);
+        return productMapper.toResponse(productRepository.save(product));
     }
 
     @Transactional
-    public void deleteProduct(Long id) {
-        if (!productRepository.existsById(id)) {
-            throw new EntityNotFoundException("Product not found with id: " + id);
+    public void deleteProduct(String sku) {
+        if (!productRepository.existsBySku(sku)) {
+            throw new EntityNotFoundException("Product not found with SKU: " + sku);
         }
-        productRepository.deleteById(id);
+        productRepository.deleteBySku(sku);
     }
 }

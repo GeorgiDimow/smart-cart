@@ -15,7 +15,6 @@ public class ProductMapper {
         }
         
         ProductResponse response = new ProductResponse();
-        response.setId(product.getId());
         response.setName(product.getName());
         response.setSku(product.getSku());
         response.setPrice(product.getPrice());

@@ -13,7 +13,7 @@ public class StoreMapper {
         if (store == null) return null;
 
         StoreResponse response = new StoreResponse();
-        response.setId(store.getId());
+        response.setCode(store.getCode()); 
         response.setName(store.getName());
         response.setAddress(store.getAddress());
         response.setType(store.getType());
@@ -24,6 +24,7 @@ public class StoreMapper {
         if (request == null) return null;
 
         return Store.builder()
+                .code(request.getCode()) 
                 .name(request.getName())
                 .address(request.getAddress())
                 .type(request.getType())

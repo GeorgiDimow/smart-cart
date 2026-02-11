@@ -31,22 +31,26 @@ public class ProductController {
         return ResponseEntity.ok(productService.getAllProducts());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse> getProduct(@PathVariable Long id) {
-        return ResponseEntity.ok(productService.getProduct(id));
+    @GetMapping("/{sku}")
+    public ResponseEntity<ProductResponse> getProduct(@PathVariable String sku) {
+        return ResponseEntity.ok(productService.getProductBySku(sku));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{sku}")
     public ResponseEntity<ProductResponse> updateProduct(
-            @PathVariable Long id, 
+            @PathVariable String sku, 
             @Valid @RequestBody UpdateProductRequest request) {
-        
-        return ResponseEntity.ok(productService.updateProduct(id, request));
+        return ResponseEntity.ok(productService.updateProduct(sku, request));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-        productService.deleteProduct(id);
-        return ResponseEntity.noContent().build(); 
+    @DeleteMapping("/{sku}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable String sku) {
+        productService.deleteProduct(sku);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/sku/{sku}")
+    public ResponseEntity<ProductResponse> getProductBySku(@PathVariable String sku) {
+        return ResponseEntity.ok(productService.getProductBySku(sku));
     }
 }
