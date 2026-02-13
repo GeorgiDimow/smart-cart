@@ -5,6 +5,9 @@ import com.smartcart.store.application.dto.inventory.StockUpdateRequest;
 import com.smartcart.store.application.service.InventoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +18,11 @@ import org.springframework.web.bind.annotation.*;
 public class InventoryController {
 
     private final InventoryService inventoryService;
+
+    @GetMapping
+    public ResponseEntity<List<InventoryResponse>> getAllInventory() {
+        return ResponseEntity.ok(inventoryService.getAllInventory());
+    }
 
     @PostMapping("/stock")
     public ResponseEntity<InventoryResponse> updateStock(@Valid @RequestBody StockUpdateRequest request) {

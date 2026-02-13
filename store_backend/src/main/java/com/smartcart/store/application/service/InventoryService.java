@@ -17,6 +17,9 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class InventoryService {
@@ -26,43 +29,65 @@ public class InventoryService {
     private final StoreRepository storeRepository;
     private final InventoryMapper inventoryMapper;
 
+    @Transactional(readOnly = true)
+    public List<InventoryResponse> getAllInventory() {
+        return inventoryRepository.findAll().stream()
+                .map(inventoryMapper::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void reduceStock(String sku, Integer quantityRequired) {
+        List<Inventory> inventories = inventoryRepository.findByProduct_Sku(sku);
+        int remainingToDeduct = quantityRequired;
+
+        for (Inventory inv : inventories) {
+            if (remainingToDeduct <= 0) break;
+
+            int available = inv.getQuantity();
+            if (available > 0) {
+                int toTake = Math.min(available, remainingToDeduct);
+                inv.setQuantity(available - toTake);
+                inventoryRepository.save(inv);
+                remainingToDeduct -= toTake;
+            }
+        }
+
+        if (remainingToDeduct > 0) {
+            throw new IllegalStateException("Insufficient stock for Product: " + sku);
+        }
+    }
+
     @Transactional
     public InventoryResponse updateStock(StockUpdateRequest request) {
-        // 1. Check if we already have stock for this specific Store + Product combo
         Inventory inventory = inventoryRepository
                 .findByStore_CodeAndProduct_Sku(request.getStoreCode(), request.getProductSku())
                 .orElse(null);
 
         if (inventory == null) {
-            // 2. If not, we need to create a new link. 
-            // Fetch the Store and Product by their Business Keys.
             Store store = storeRepository.findByCode(request.getStoreCode())
-                    .orElseThrow(() -> new EntityNotFoundException("Store not found with code: " + request.getStoreCode()));
+                    .orElseThrow(() -> new EntityNotFoundException("Store not found: " + request.getStoreCode()));
 
             Product product = productRepository.findBySku(request.getProductSku())
-                    .orElseThrow(() -> new EntityNotFoundException("Product not found with SKU: " + request.getProductSku()));
+                    .orElseThrow(() -> new EntityNotFoundException("Product not found: " + request.getProductSku()));
 
             inventory = Inventory.builder()
                     .store(store)
                     .product(product)
-                    .quantity(0) // Start with 0 before updating
+                    .quantity(0)
                     .build();
         }
 
-        // 3. Update the quantity (whether new or existing)
         inventory.setQuantity(request.getQuantity());
-
-        // 4. Save and return
         Inventory saved = inventoryRepository.save(inventory);
         return inventoryMapper.toResponse(saved);
     }
 
     @EventListener
-    @Transactional // Join the existing transaction
+    @Transactional
     public void handleProductDeletion(ProductDeletedEvent event) {
         inventoryRepository.deleteByProduct_Sku(event.getSku());
     }
-
 
     @EventListener
     @Transactional
