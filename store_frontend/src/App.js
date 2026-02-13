@@ -3,8 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import ShopPage from './pages/ShopPage';
-import ScannerPage from './pages/ScannerPage';
+import AdminPage from './pages/AdminPage';
 
 function App() {
   const [sessionId, setSessionId] = useState('');
@@ -21,19 +20,13 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <nav className="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <nav className="navbar navbar-dark bg-dark mb-4">
           <div className="container">
-            <Link className="navbar-brand" to="/">🛒 SmartCart</Link>
-            <div className="navbar-nav">
-              <Link className="nav-link" to="/">Store</Link>
-              <Link className="nav-link" to="/scan">📷 AI Scanner</Link>
-            </div>
+            <span className="navbar-brand mb-0 h1">🛒 SmartCart <small className="text-muted">| Admin Console</small></span>
           </div>
         </nav>
-
         <Routes>
-          <Route path="/" element={<ShopPage sessionId={sessionId} />} />
-          <Route path="/scan" element={<ScannerPage sessionId={sessionId} />} />
+          <Route path="/" element={<AdminPage sessionId={sessionId} />} />
         </Routes>
       </div>
     </Router>
