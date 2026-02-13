@@ -1,72 +1,42 @@
-import React, { useState, useRef } from 'react';
-import axios from 'axios';
-import './App.css'; 
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+import ShopPage from './pages/ShopPage';
+import ScannerPage from './pages/ScannerPage';
 
 function App() {
-  const [prediction, setPrediction] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
-  const fileInputRef = useRef(null);
+  const [sessionId, setSessionId] = useState('');
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result); 
-      };
-      reader.readAsDataURL(file);
+  useEffect(() => {
+    let storedSession = localStorage.getItem('smart_cart_session');
+    if (!storedSession) {
+      storedSession = uuidv4();
+      localStorage.setItem('smart_cart_session', storedSession);
     }
-  };
-
-  const handleUpload = async () => {
-    if (!imagePreview) return;
-
-    try {
-      const response = await axios.post('http://localhost:8080/api/scan', {
-        image: imagePreview 
-      });
-      setPrediction(response.data);
-    } catch (error) {
-      console.error("Error uploading image:", error);
-      alert("Error processing image.");
-    }
-  };
+    setSessionId(storedSession);
+  }, []);
 
   return (
-    <div className="App">
-      <h1>🍏 AI Fruit Scanner</h1>
-      
-      <div className="card">
-        <input 
-          type="file" 
-          accept="image/*" 
-          onChange={handleFileChange} 
-          ref={fileInputRef} 
-          style={{ display: 'none' }} 
-        />
-
-        <button onClick={() => fileInputRef.current.click()} className="btn-upload">
-          📁 Choose Image
-        </button>
-
-        {imagePreview && (
-          <div className="preview-container">
-            <img src={imagePreview} alt="Preview" className="preview-image" />
-            <button onClick={handleUpload} className="btn-scan">🔍 Identify Item</button>
+    <Router>
+      <div className="App">
+        <nav className="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+          <div className="container">
+            <Link className="navbar-brand" to="/">🛒 SmartCart</Link>
+            <div className="navbar-nav">
+              <Link className="nav-link" to="/">Store</Link>
+              <Link className="nav-link" to="/scan">📷 AI Scanner</Link>
+            </div>
           </div>
-        )}
+        </nav>
 
-        {prediction && (
-          <div className="result-box">
-             {prediction.prediction === "Unsure" ? (
-                <h2 style={{color: 'orange'}}>🤔 Unsure ({prediction.confidence})</h2>
-             ) : (
-                <h2>It's a: <span style={{color: 'green'}}>{prediction.prediction}</span></h2>
-             )}
-          </div>
-        )}
+        <Routes>
+          <Route path="/" element={<ShopPage sessionId={sessionId} />} />
+          <Route path="/scan" element={<ScannerPage sessionId={sessionId} />} />
+        </Routes>
       </div>
-    </div>
+    </Router>
   );
 }
 
