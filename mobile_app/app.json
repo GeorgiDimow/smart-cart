@@ -1,0 +1,44 @@
+{
+  "expo": {
+    "name": "Smart Cart",
+    "slug": "smart-cart",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./public/logo512.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./public/logo192.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "We need camera access to scan fruits and vegetables."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./public/logo512.png",
+        "backgroundColor": "#ffffff"
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "usesCleartextTraffic": true
+    },
+    "web": {
+      "favicon": "./public/favicon.ico"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow Smart Cart to scan products."
+        }
+      ]
+    ]
+  }
+}
